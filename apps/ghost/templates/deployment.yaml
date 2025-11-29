@@ -47,6 +47,8 @@ spec:
         {{- else }}
         - name: database__client
           value: "sqlite3"
+        - name: database__connection__filename
+          value: "/var/lib/ghost/content/data/ghost.db"
         {{- end }}
         {{- if .Values.ghost.mail }}
         {{- if .Values.ghost.mail.transport }}
