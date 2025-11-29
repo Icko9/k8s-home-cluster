@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ghost.fullname" . }}
+  labels:
+    {{- include "ghost.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "ghost.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ghost.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 2368
+          protocol: TCP
+        env:
+        - name: url
+          value: {{ .Values.ghost.url | quote }}
+        {{- if eq .Values.ghost.database.client "mysql" }}
+        - name: database__client
+          value: {{ .Values.ghost.database.client | quote }}
+        {{- if .Values.ghost.database.connection }}
+        - name: database__connection__host
+          value: {{ .Values.ghost.database.connection.host | quote }}
+        - name: database__connection__port
+          value: {{ .Values.ghost.database.connection.port | quote }}
+        - name: database__connection__user
+          value: {{ .Values.ghost.database.connection.user | quote }}
+        - name: database__connection__password
+          value: {{ .Values.ghost.database.connection.password | quote }}
+        - name: database__connection__database
+          value: {{ .Values.ghost.database.connection.database | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.ghost.mail.transport }}
+        - name: mail__transport
+          value: {{ .Values.ghost.mail.transport | quote }}
+        {{- if .Values.ghost.mail.options }}
+        - name: mail__options__host
+          value: {{ .Values.ghost.mail.options.host | quote }}
+        - name: mail__options__port
+          value: {{ .Values.ghost.mail.options.port | quote }}
+        - name: mail__options__secure
+          value: {{ .Values.ghost.mail.options.secure | toString | quote }}
+        {{- if .Values.ghost.mail.options.auth }}
+        - name: mail__options__auth__user
+          value: {{ .Values.ghost.mail.options.auth.user | quote }}
+        - name: mail__options__auth__pass
+          value: {{ .Values.ghost.mail.options.auth.pass | quote }}
+        {{- end }}
+        {{- if .Values.ghost.mail.options.from }}
+        - name: mail__options__from
+          value: {{ .Values.ghost.mail.options.from | quote }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.extraEnv }}
+        {{- toYaml .Values.extraEnv | nindent 8 }}
+        {{- end }}
+        {{- if .Values.persistence.enabled }}
+        volumeMounts:
+        - name: ghost-content
+          mountPath: {{ .Values.persistence.mountPath }}
+        {{- end }}
+        {{- if .Values.securityContext.runAsNonRoot }}
+        securityContext:
+          runAsUser: {{ .Values.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.securityContext.runAsGroup }}
+          runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+        {{- end }}
+        {{- if .Values.resources }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- end }}
+        {{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          {{- toYaml .Values.livenessProbe.httpGet | nindent 10 }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          {{- toYaml .Values.readinessProbe.httpGet | nindent 10 }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        {{- end }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+      - name: ghost-content
+        persistentVolumeClaim:
+          claimName: {{ include "ghost.fullname" . }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+

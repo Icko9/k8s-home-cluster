@@ -1,0 +1,132 @@
+# Ghost Helm Chart Values
+# Using official Ghost Docker image: https://hub.docker.com/_/ghost/
+
+# Replica count
+replicaCount: 1
+
+# Image configuration
+image:
+  repository: ghost
+  tag: "5.85.0"  # Use specific version tag, or "latest" for latest
+  pullPolicy: IfNotPresent
+
+# Ghost configuration
+ghost:
+  # Blog URL - must be accessible from your network
+  url: "https://balkandevops.com"  # Adjust IP and port as needed
+  
+  # Database configuration
+  # For SQLite (default), no additional config needed
+  # For MySQL/MariaDB, configure below
+  database:
+    client: "sqlite3"  # Options: sqlite3, mysql
+    # For MySQL, uncomment and configure:
+    # connection:
+    #   host: "mysql-host"
+    #   port: 3306
+    #   user: "ghost"
+    #   password: "password"
+    #   database: "ghost"
+  
+  # Mail configuration (optional)
+  mail:
+    # transport: "SMTP"
+    # options:
+    #   host: "smtp.gmail.com"
+    #   port: 587
+    #   secure: false
+    #   auth:
+    #     user: "your-email@gmail.com"
+    #     pass: "your-app-password"
+    #   from: "noreply@yourdomain.com"
+
+# Service configuration
+service:
+  type: ClusterIP  # Use ClusterIP if using Ingress, NodePort for direct access
+  port: 2368  # Ghost default port
+  nodePort: 30080  # Only used if type is NodePort. Set to null for auto-assignment
+
+# Persistence configuration
+persistence:
+  enabled: true
+  storageClass: longhorn
+  size: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  # Ghost stores all data in /var/lib/ghost/content
+  mountPath: /var/lib/ghost/content
+
+# Resource limits
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# Security context
+securityContext:
+  runAsUser: 1000  # Ghost runs as UID 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  runAsNonRoot: true
+
+# Pod security context
+podSecurityContext:
+  enabled: true
+  fsGroup: 1000
+
+# Health checks
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: 2368
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: 2368
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Node selector (optional)
+nodeSelector:
+  kubernetes.io/hostname: precision5540
+
+# Tolerations (optional)
+tolerations: []
+
+# Affinity (optional)
+affinity: {}
+
+# Additional environment variables
+extraEnv: []
+  # - name: NODE_ENV
+  #   value: "production"
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx  # Your ingress class name
+  host: balkandevops.com
+  path: /
+  pathType: Prefix
+  annotations: {}
+    # Add any ingress annotations here if needed
+    # Example for nginx-ingress:
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  tls: []
+    # If you have TLS certificate manually configured, uncomment:
+    # - hosts:
+    #   - balkandevops.com
+    #   secretName: ghost-tls

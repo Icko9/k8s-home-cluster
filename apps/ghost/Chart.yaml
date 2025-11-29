@@ -1,0 +1,17 @@
+apiVersion: v2
+name: ghost
+description: A Helm chart for Ghost CMS using the official Docker image
+type: application
+version: 0.1.0
+appVersion: "5.85.0"
+keywords:
+  - ghost
+  - cms
+  - blog
+  - publishing
+home: https://ghost.org
+sources:
+  - https://github.com/TryGhost/Ghost
+maintainers:
+  - name: k8s-home-cluster
+
