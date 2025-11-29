@@ -44,6 +44,9 @@ spec:
         - name: database__connection__database
           value: {{ .Values.ghost.database.connection.database | quote }}
         {{- end }}
+        {{- else }}
+        - name: database__client
+          value: "sqlite3"
         {{- end }}
         {{- if .Values.ghost.mail }}
         {{- if .Values.ghost.mail.transport }}
