@@ -30,7 +30,6 @@ ghost:
   
   # Mail configuration (optional)
   # Uncomment and configure if you want email support
-  mail: {}
   # mail:
   #   transport: "SMTP"
   #   options:
