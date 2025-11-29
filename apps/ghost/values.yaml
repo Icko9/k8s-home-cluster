@@ -13,7 +13,7 @@ image:
 # Ghost configuration
 ghost:
   # Blog URL - must be accessible from your network
-  url: "https://balkandevops.com"  # Adjust IP and port as needed
+  url: "http://10.0.1.10:30080"  # Adjust IP and port as needed - using NodePort for now
   
   # Database configuration
   # For SQLite (default), no additional config needed
@@ -43,7 +43,7 @@ ghost:
 
 # Service configuration
 service:
-  type: ClusterIP  # Use ClusterIP if using Ingress, NodePort for direct access
+  type: NodePort  # Use ClusterIP if using Ingress, NodePort for direct access
   port: 2368  # Ghost default port
   nodePort: 30080  # Only used if type is NodePort. Set to null for auto-assignment
 
