@@ -29,16 +29,18 @@ ghost:
     #   database: "ghost"
   
   # Mail configuration (optional)
-  mail:
-    # transport: "SMTP"
-    # options:
-    #   host: "smtp.gmail.com"
-    #   port: 587
-    #   secure: false
-    #   auth:
-    #     user: "your-email@gmail.com"
-    #     pass: "your-app-password"
-    #   from: "noreply@yourdomain.com"
+  # Uncomment and configure if you want email support
+  mail: {}
+  # mail:
+  #   transport: "SMTP"
+  #   options:
+  #     host: "smtp.gmail.com"
+  #     port: 587
+  #     secure: false
+  #     auth:
+  #       user: "your-email@gmail.com"
+  #       pass: "your-app-password"
+  #     from: "noreply@yourdomain.com"
 
 # Service configuration
 service:

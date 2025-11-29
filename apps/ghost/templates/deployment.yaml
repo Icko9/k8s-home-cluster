@@ -45,7 +45,7 @@ spec:
           value: {{ .Values.ghost.database.connection.database | quote }}
         {{- end }}
         {{- end }}
-        {{- if .Values.ghost.mail.transport }}
+        {{- if and .Values.ghost.mail .Values.ghost.mail.transport }}
         - name: mail__transport
           value: {{ .Values.ghost.mail.transport | quote }}
         {{- if .Values.ghost.mail.options }}
