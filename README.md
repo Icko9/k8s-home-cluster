@@ -4,11 +4,19 @@ A GitOps-managed Kubernetes homelab running on repurposed laptops.
 
 ## 🏗️ Architecture
 
-| Node | Hostname | Hardware | Role | Connection |
-|------|----------|----------|------|------------|
-| Master | `master` | VM on ASUS VivoBook | Control Plane | Bridge (Ethernet) |
-| Worker 1 | `asuslpt` | ASUS VivoBook i3, 8GB RAM | Worker + VM Host | USB-to-LAN |
-| Worker 2 | `precision5540` | Dell Precision i7-9850H, 16GB RAM | Worker | WiFi |
+### Physical Layout
+- **1x ASUS VivoBook** - Hosts master VM + runs as worker node
+- **1x Dell Precision 5540** - WiFi worker (requires MASQUERADE setup)
+
+### Logical Kubernetes Nodes
+
+| Node | Hostname | Type | Role | Connection | IP |
+|------|----------|------|------|------------|-----|
+| Master | `master` | VM | Control Plane | Bridged networking | 192.168.1.50 |
+| Worker 1 | `asuslpt` | Physical | Worker + VM Host | USB-to-LAN | 192.168.1.104 |
+| Worker 2 | `precision5540` | Physical | Worker | WiFi ⚠️ | 192.168.1.105 |
+
+> **Note:** The `precision5540` WiFi node requires special iptables MASQUERADE configuration. See [WiFi Node Setup](docs/troubleshooting/wifi-node-debugging.md) or run `scripts/setup-wifi-node.sh`.
 
 ## 📦 Deployed Applications
 
@@ -26,25 +34,25 @@ A GitOps-managed Kubernetes homelab running on repurposed laptops.
 ```
 k8s-home-cluster/
 ├── apps/                        # Application manifests
-│   ├── adguard/                 # AdGuard Home DNS
-│   ├── bookstack/               # Documentation wiki
 │   ├── cv/                      # Personal CV page
 │   ├── ghost/                   # Ghost blog (Helm chart)
 │   ├── grafana/                 # Monitoring dashboards
 │   └── homepage/                # Homepage dashboard
 │
 ├── infrastructure/              # Cluster infrastructure
-│   ├── cloudflare-tunnel/       # External access via Cloudflare
-│   ├── ingress/                 # Ingress resources
-│   └── longhorn/                # Storage provisioner
+│   └── cloudflare-tunnel/       # External access via Cloudflare
 │
 ├── docs/                        # Documentation
 │   ├── architecture.md          # Cluster architecture details
-│   ├── setup-guide.md           # Initial cluster setup
+│   ├── getting-started.md       # Setup guide
+│   ├── setup/                   # Application setup guides
 │   └── troubleshooting/         # Debug guides & postmortems
 │
 └── scripts/                     # Helper scripts
+    └── setup-wifi-node.sh       # WiFi node MASQUERADE setup
 ```
+
+> **⚠️ Important:** Replace all IP addresses (192.168.1.x) in configs with your actual network addresses when replicating this setup.
 
 ## 🚀 Tech Stack
 
@@ -57,24 +65,26 @@ k8s-home-cluster/
 
 ## 🔧 Quick Start
 
+See [Getting Started Guide](docs/getting-started.md) for complete setup instructions.
+
 ```bash
 # Clone the repository
 git clone git@github.com:icko0/k8s-home-cluster.git
 cd k8s-home-cluster
 
-# Deploy an application
-kubectl apply -f apps/homepage/
-
-# Deploy infrastructure component
-kubectl apply -f infrastructure/ingress/
+# Follow installation order in docs/getting-started.md
+# 1. Infrastructure (Longhorn)
+# 2. Ingress (Cloudflare Tunnel)
+# 3. Monitoring (Prometheus, Grafana)
+# 4. Applications (Ghost, Homepage, etc.)
 ```
 
 ## 🎯 Roadmap
 
-- [ ] ArgoCD for GitOps automation
-- [ ] Sealed Secrets for secret management
-- [ ] Renovate for dependency updates
-- [ ] Automated backups with Velero
+- ArgoCD for GitOps automation
+- Sealed Secrets for secret management
+- Renovate for dependency updates
+- Automated backups with Velero
 
 ## 📝 License
 

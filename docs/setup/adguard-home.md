@@ -5,11 +5,11 @@
 This guide documents the complete setup of AdGuard Home on a Kubernetes cluster to provide network-wide DNS-based ad blocking and tracker protection.
 
 **Final Configuration:**
-- **AdGuard Home IP:** `10.0.1.20` (Worker node IP)
-- **Web UI:** `http://10.0.1.10:30646`
+- **AdGuard Home IP:** `192.168.1.20` (Worker node IP)
+- **Web UI:** `http://192.168.1.10:30646`
 - **DNS Port:** 53 (UDP/TCP)
 - **Router:** Home Router
-- **Network:** 10.0.1.0/24
+- **Network:** 192.168.1.0/24
 
 ---
 
@@ -84,7 +84,7 @@ Open your browser and go to:
 http://<master-node-ip>:<nodeport>
 ```
 
-Example: `http://10.0.1.10:30646`
+Example: `http://192.168.1.10:30646`
 
 You can use any node's IP in your cluster (master or worker) with the NodePort to access the web UI.
 
@@ -237,14 +237,14 @@ Listening to tcp://[::]:53
 kubectl get nodes -o wide
 ```
 
-Note the **INTERNAL-IP** of your worker node (e.g., `10.0.1.20`).
+Note the **INTERNAL-IP** of your worker node (e.g., `192.168.1.20`).
 
 ### Configure Router DHCP Server
 
 1. **Access Router:** Open router web interface
 2. **Navigate to:** `Network → DHCP Server` (NOT Internet/WAN DNS)
 3. **Configure:**
-   - **Primary DNS:** `10.0.1.20` (your worker node IP)
+   - **Primary DNS:** `192.168.1.20` (your worker node IP)
    - **Secondary DNS:** `1.1.1.1` (Cloudflare backup)
 4. **Save** settings
 
@@ -261,14 +261,14 @@ Note the **INTERNAL-IP** of your worker node (e.g., `10.0.1.20`).
 ### Test from Worker Node
 
 ```bash
-nslookup google.com 10.0.1.20
+nslookup google.com 192.168.1.20
 ```
 
 Should resolve successfully.
 
 ### Check AdGuard Home Dashboard
 
-1. Open AdGuard Home web UI: `http://10.0.1.10:30646`
+1. Open AdGuard Home web UI: `http://192.168.1.10:30646`
 2. Go to **Dashboard**
 3. You should see DNS queries appearing
 4. Check **Top clients** - should show multiple device IPs
@@ -283,7 +283,7 @@ Should resolve successfully.
    - **Android/iOS:** Toggle Wi‑Fi off/on
 
 **Verify DNS on device:**
-- Check network settings - DNS should show `10.0.1.20`
+- Check network settings - DNS should show `192.168.1.20`
 - Visit websites - should work normally
 - Check AdGuard Home dashboard - should see queries from device
 
@@ -293,7 +293,7 @@ Should resolve successfully.
 
 ### Configure Filter Lists
 
-1. **Open AdGuard Home:** `http://10.0.1.10:30646`
+1. **Open AdGuard Home:** `http://192.168.1.10:30646`
 2. **Navigate to:** `Filters → DNS blocklists`
 3. **Enable recommended lists:**
    - ✅ AdGuard DNS filter
@@ -363,7 +363,7 @@ Should resolve successfully.
 1. Verify router DHCP DNS is set to worker node IP
 2. Reconnect devices to Wi‑Fi
 3. Check device DNS settings manually
-4. Test DNS: `nslookup google.com 10.0.1.20`
+4. Test DNS: `nslookup google.com 192.168.1.20`
 
 ### Issue: Port 53 Already in Use
 
@@ -389,7 +389,7 @@ Should resolve successfully.
 
 **Solutions:**
 1. Force DHCP renewal on devices
-2. Manually set DNS on device to `10.0.1.20`
+2. Manually set DNS on device to `192.168.1.20`
 3. Check router DHCP settings are saved
 4. Restart router if needed
 
@@ -466,17 +466,17 @@ helm upgrade adguard-home k8s-at-home/adguard-home -n adguard
 
 ### Network Configuration
 
-- **Master Node IP:** `10.0.1.10`
-- **Worker Node IP:** `10.0.1.20`
-- **Router IP:** `10.0.1.1`
-- **DHCP Range:** `10.0.1.100-249`
-- **Router DNS (DHCP):** `10.0.1.20`
+- **Master Node IP:** `192.168.1.10`
+- **Worker Node IP:** `192.168.1.20`
+- **Router IP:** `192.168.1.1`
+- **DHCP Range:** `192.168.1.100-249`
+- **Router DNS (DHCP):** `192.168.1.20`
 
 ### AdGuard Home Settings
 
 - **Upstream DNS:** `1.1.1.1`, `1.0.0.1` (Cloudflare)
 - **Filter Lists:** AdGuard DNS, AdAway, EasyList, EasyPrivacy, Malware Domains, Phishing Army
-- **Web UI:** `http://10.0.1.10:30646`
+- **Web UI:** `http://192.168.1.10:30646`
 
 ---
 
@@ -484,7 +484,7 @@ helm upgrade adguard-home k8s-at-home/adguard-home -n adguard
 
 ✅ AdGuard Home pod is running  
 ✅ Port 53 is bound on worker node  
-✅ Router DHCP assigns DNS to `10.0.1.20`  
+✅ Router DHCP assigns DNS to `192.168.1.20`  
 ✅ Devices show DNS queries in dashboard  
 ✅ Filter lists are enabled and updated  
 ✅ Blocked queries appear in dashboard  

@@ -10,6 +10,8 @@ This document describes the architecture of a 3-node Kubernetes homelab cluster 
 **Storage:** Longhorn (distributed block storage)  
 **External Access:** Cloudflare Tunnel
 
+> **Note:** Replace all IP addresses (192.168.1.x) with your actual network addresses when replicating this setup.
+
 ---
 
 ## 🖥️ Hardware Overview
