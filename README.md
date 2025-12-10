@@ -14,7 +14,7 @@ A GitOps-managed Kubernetes homelab running on repurposed laptops.
 
 | App | URL | Description |
 |-----|-----|-------------|
-| Homepage | [www.balkandevops.com](https://balkandevops.com) | Dashboard with cluster monitoring |
+| Homepage | [balkandevops.com](https://balkandevops.com) | Dashboard with cluster monitoring |
 | Ghost | [blog.balkandevops.com](https://blog.balkandevops.com) | Tech blog |
 | BookStack | [bookstack.balkandevops.com](https://bookstack.balkandevops.com) | Documentation wiki |
 | CV | [me.balkandevops.com](https://me.balkandevops.com) | Personal portfolio |
