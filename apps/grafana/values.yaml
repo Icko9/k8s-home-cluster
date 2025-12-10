@@ -1,0 +1,37 @@
+# Grafana Helm values
+# Usage: helm upgrade grafana grafana/grafana -n default -f apps/grafana/values.yaml
+
+persistence:
+  enabled: true
+  storageClassName: longhorn
+  size: 5Gi
+
+service:
+  type: NodePort
+  nodePort: 30300
+
+grafana.ini:
+  server:
+    root_url: https://grafana.balkandevops.com
+  
+  security:
+    # Allow embedding in iframes (for Homepage)
+    allow_embedding: true
+  
+  auth.anonymous:
+    # Enable anonymous access for dashboard viewing
+    enabled: true
+    org_name: Main Org.
+    org_role: Viewer
+
+# Datasources
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-server:80
+      access: proxy
+      isDefault: true
+
