@@ -5,7 +5,7 @@
 This guide documents the complete setup of Ghost (a headless CMS/blogging platform) on a Kubernetes cluster using a custom Helm chart with the official Ghost Docker image from [Docker Hub](https://hub.docker.com/_/ghost/).
 
 **Final Configuration:**
-- **Ghost URL:** `http://10.0.1.10:30080`
+- **Ghost URL:** `http://192.168.1.10:30080`
 - **Storage:** Longhorn (10Gi persistent volume)
 - **Database:** SQLite (built-in, default)
 - **Service Type:** NodePort
@@ -63,7 +63,7 @@ cat apps/ghost/values.yaml
 
 1. **Ghost URL** (`ghost.url`):
    - Set to your master node IP and NodePort
-   - Example: `http://10.0.1.10:30080`
+   - Example: `http://192.168.1.10:30080`
    - **Important:** This must match your actual access URL
 
 2. **Image Version** (`image.tag`):
@@ -129,7 +129,7 @@ If you want to override specific values without editing the file:
 ```bash
 helm install ghost ./apps/ghost \
   --namespace ghost \
-  --set ghost.url=http://10.0.1.10:30080 \
+  --set ghost.url=http://192.168.1.10:30080 \
   --set service.nodePort=30080 \
   --set persistence.storageClass=longhorn
 ```
@@ -231,7 +231,7 @@ Open your browser and go to:
 http://<master-node-ip>:<nodeport>
 ```
 
-Example: `http://10.0.1.10:30080`
+Example: `http://192.168.1.10:30080`
 
 You can use any node's IP in your cluster (master or worker) with the NodePort to access Ghost.
 
@@ -579,8 +579,8 @@ helm upgrade ghost ./apps/ghost --namespace ghost
 
 ### Network Configuration
 
-- **Master Node IP:** `10.0.1.10`
-- **Ghost URL:** `http://10.0.1.10:30080`
+- **Master Node IP:** `192.168.1.10`
+- **Ghost URL:** `http://192.168.1.10:30080`
 - **Service Type:** NodePort
 - **Container Port:** 2368
 

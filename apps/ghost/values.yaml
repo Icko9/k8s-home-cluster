@@ -115,8 +115,10 @@ extraEnv: []
   #   value: "production"
 
 # Ingress configuration
+# Uses the Helm chart's ingress template with external-dns annotations
+# for Cloudflare Tunnel integration
 ingress:
-  enabled: false  # Using separate ingress manifest with external-dns
+  enabled: true
   className: nginx
   host: blog.balkandevops.com
   path: /

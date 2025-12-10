@@ -64,7 +64,7 @@ image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
 
 ```yaml
 ghost:
-  url: "http://10.0.1.10:30080"
+  url: "http://192.168.1.10:30080"
 ```
 
 **Used in template as:**
@@ -74,7 +74,7 @@ env:
   value: {{ .Values.ghost.url | quote }}
 ```
 
-**Result:** `value: "http://10.0.1.10:30080"`
+**Result:** `value: "http://192.168.1.10:30080"`
 
 **Why `| quote`?** Ensures the value is treated as a string in YAML.
 
@@ -225,7 +225,7 @@ env:
 ```yaml
 env:
 - name: url
-  value: "http://10.0.1.10:30080"
+  value: "http://192.168.1.10:30080"
 ```
 
 #### Conditional Variables

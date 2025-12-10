@@ -47,6 +47,7 @@ data:
             siteMonitor: http://grafana.default.svc.cluster.local:80
         - Prometheus:
             icon: prometheus.png
+            # Note: Using NodePort. Replace with your Prometheus service URL
             href: http://192.168.1.50:30090
             description: Metrics & Monitoring
             siteMonitor: http://prometheus-server.default.svc.cluster.local:80
@@ -114,6 +115,8 @@ data:
             description: Estimated electricity cost (headless)
             widget:
               type: customapi
+              # Note: Using NodePort for now. Consider switching to service DNS:
+              # http://prometheus-server.default.svc.cluster.local:80/api/v1/query?query=...
               url: http://192.168.1.50:30090/api/v1/query?query=avg_over_time(sum(scaph_host_power_microwatts)[24h:5m])/1000000*1.25*730/1000*7.26
               refreshInterval: 300000
               method: GET
@@ -127,6 +130,7 @@ data:
             description: CPU/Memory power (RAPL)
             widget:
               type: customapi
+              # Note: Using NodePort for now. Consider switching to service DNS
               url: http://192.168.1.50:30090/api/v1/query?query=sum(scaph_host_power_microwatts)/1000000
               refreshInterval: 10000
               method: GET
@@ -140,6 +144,7 @@ data:
             description: Estimated total (headless ~1.25x)
             widget:
               type: customapi
+              # Note: Using NodePort for now. Consider switching to service DNS
               url: http://192.168.1.50:30090/api/v1/query?query=sum(scaph_host_power_microwatts)/1000000*1.25
               refreshInterval: 10000
               method: GET
