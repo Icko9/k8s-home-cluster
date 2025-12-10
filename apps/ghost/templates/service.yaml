@@ -17,3 +17,14 @@ spec:
   selector:
     {{- include "ghost.selectorLabels" . | nindent 4 }}
 
+
+
+
+
+
+
+
+
+
+
+
