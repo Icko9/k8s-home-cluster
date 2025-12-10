@@ -151,9 +151,9 @@ cat /etc/hosts | grep -E "master|worker"
 ```bash
 # Add all cluster nodes to /etc/hosts
 sudo tee -a /etc/hosts << EOF
-10.0.1.10  master
-10.0.1.20  worker1
-10.0.1.30  worker2
+192.168.1.10  master
+192.168.1.20  worker1
+192.168.1.30  worker2
 EOF
 
 # Restart kubelet
