@@ -1,0 +1,224 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage
+  namespace: homepage
+  labels:
+    app.kubernetes.io/instance: homepage
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: homepage
+data:
+  docker.yaml: ""
+
+  kubernetes.yaml: |
+    mode: cluster
+
+  bookmarks.yaml: |
+    - Developer:
+        - GitHub:
+            - abbr: GH
+              href: https://github.com/icko0/k8s-home-cluster
+        - LinkedIn:
+            - abbr: LI
+              href: https://linkedin.com/in/ivan-gjakovikj-233a95236/
+        - Blog:
+            - abbr: BD
+              href: https://blog.balkandevops.com
+        - CV:
+            - abbr: ME
+              href: https://me.balkandevops.com
+    - Documentation:
+        - Kubernetes Docs:
+            - abbr: K8S
+              href: https://kubernetes.io/docs/
+        - Helm Docs:
+            - abbr: HLM
+              href: https://helm.sh/docs/
+        - Calico Docs:
+            - abbr: CAL
+              href: https://docs.tigera.io/calico/latest/about/
+
+  services.yaml: |
+    - Infrastructure:
+        - Grafana:
+            icon: grafana.png
+            href: https://grafana.balkandevops.com
+            description: Dashboards & Visualization
+            siteMonitor: http://grafana.default.svc.cluster.local:80
+        - Prometheus:
+            icon: prometheus.png
+            href: http://192.168.1.50:30090
+            description: Metrics & Monitoring
+            siteMonitor: http://prometheus-server.default.svc.cluster.local:80
+        - AdGuard Home:
+            icon: adguard-home.png
+            href: http://192.168.1.50:31785
+            description: DNS & Ad Blocking
+            siteMonitor: http://192.168.1.50:31785
+        - Longhorn:
+            icon: longhorn.png
+            description: Distributed Storage
+
+    - Applications:
+        - Ghost Blog:
+            icon: ghost.png
+            href: https://blog.balkandevops.com
+            description: BalkanDevOps Tech Blog
+            siteMonitor: http://ghost.ghost.svc.cluster.local:2368
+        - BookStack:
+            icon: bookstack.png
+            href: https://bookstack.balkandevops.com
+            description: Documentation Wiki
+            siteMonitor: http://bookstack.default.svc.cluster.local:80
+        - CV / Portfolio:
+            icon: mdi-account
+            href: https://me.balkandevops.com
+            description: Personal Portfolio
+            siteMonitor: http://cv.cv.svc.cluster.local:80
+
+    - Operators:
+        - MariaDB Operator:
+            icon: mariadb.png
+            description: Database Management
+        - Calico:
+            icon: calico.png
+            href: https://www.tigera.io/project-calico/
+            description: CNI & Network Policy
+        - External DNS:
+            icon: external-dns.png
+            description: DNS Automation
+        - Cloudflare Tunnel:
+            icon: cloudflare.png
+            href: https://dash.cloudflare.com
+            description: Secure Ingress
+
+    - Power Monitoring:
+        - Process Power Usage:
+            icon: grafana.png
+            description: CPU power by process (Scaphandre + RAPL)
+            widget:
+              type: iframe
+              src: https://grafana.balkandevops.com/d-solo/Bg3f4zPGz/kubernetes-power-usage-using-scaphandre?orgId=1&panelId=4&refresh=30s&theme=dark
+              height: 200
+        - Node Power:
+            icon: grafana.png
+            description: Per-node power consumption
+            widget:
+              type: iframe
+              src: https://grafana.balkandevops.com/d-solo/Bg3f4zPGz/kubernetes-power-usage-using-scaphandre?orgId=1&panelId=2&refresh=30s&theme=dark
+              height: 200
+
+    - Cluster Stats:
+        - Monthly Power Cost:
+            icon: mdi-currency-eur
+            description: Estimated electricity cost (headless)
+            widget:
+              type: customapi
+              url: http://192.168.1.50:30090/api/v1/query?query=avg_over_time(sum(scaph_host_power_microwatts)[24h:5m])/1000000*1.25*730/1000*7.26
+              refreshInterval: 300000
+              method: GET
+              mappings:
+                - field: data.result.0.value.1
+                  label: Monthly Est
+                  format: number
+                  suffix: " MKD"
+        - Current Power:
+            icon: mdi-lightning-bolt
+            description: CPU/Memory power (RAPL)
+            widget:
+              type: customapi
+              url: http://192.168.1.50:30090/api/v1/query?query=sum(scaph_host_power_microwatts)/1000000
+              refreshInterval: 10000
+              method: GET
+              mappings:
+                - field: data.result.0.value.1
+                  label: RAPL
+                  format: number
+                  suffix: " W"
+        - Est. Wall Power:
+            icon: mdi-power-plug
+            description: Estimated total (headless ~1.25x)
+            widget:
+              type: customapi
+              url: http://192.168.1.50:30090/api/v1/query?query=sum(scaph_host_power_microwatts)/1000000*1.25
+              refreshInterval: 10000
+              method: GET
+              mappings:
+                - field: data.result.0.value.1
+                  label: Wall
+                  format: number
+                  suffix: " W"
+
+  widgets.yaml: |
+    - logo:
+        icon: https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/kubernetes.png
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "k8s-homelab"
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+    - resources:
+        backend: kubernetes
+        cpu: true
+        memory: true
+        expanded: true
+        label: Cluster Resources
+    - datetime:
+        text_size: xl
+        format:
+          dateStyle: long
+          timeStyle: short
+    - search:
+        provider: google
+        target: _blank
+    - openmeteo:
+        label: Skopje
+        latitude: 41.9981
+        longitude: 21.4254
+        timezone: Europe/Skopje
+        units: metric
+        cache: 5
+
+  settings.yaml: |
+    title: BalkanDevOps Homelab
+    favicon: https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/kubernetes.png
+    headerStyle: boxed
+    background:
+      image: https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2560&q=80
+      opacity: 15
+      blur: sm
+    theme: dark
+    color: slate
+    disableCollapse: false
+    hideVersion: false
+    cardBlur: md
+    statusStyle: dot
+    layout:
+      Infrastructure:
+        style: row
+        columns: 4
+        icon: mdi-server-network
+      Applications:
+        style: row
+        columns: 3
+        icon: mdi-application
+      Operators:
+        style: row
+        columns: 4
+        icon: mdi-cogs
+      Power Monitoring:
+        style: row
+        columns: 2
+        icon: mdi-lightning-bolt
+      Cluster Stats:
+        style: row
+        columns: 3
+        icon: mdi-chart-line
+

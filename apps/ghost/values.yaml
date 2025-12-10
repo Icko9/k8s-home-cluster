@@ -13,7 +13,7 @@ image:
 # Ghost configuration
 ghost:
   # Blog URL - must be accessible from your network
-  url: "https://balkandevops.com"  # Adjust IP and port as needed
+  url: "https://blog.balkandevops.com"  # Cloudflare Tunnel domain
   
   # Database configuration
   # For SQLite (default), no additional config needed
@@ -29,20 +29,21 @@ ghost:
     #   database: "ghost"
   
   # Mail configuration (optional)
-  mail:
-    # transport: "SMTP"
-    # options:
-    #   host: "smtp.gmail.com"
-    #   port: 587
-    #   secure: false
-    #   auth:
-    #     user: "your-email@gmail.com"
-    #     pass: "your-app-password"
-    #   from: "noreply@yourdomain.com"
+  # Uncomment and configure if you want email support
+  # mail:
+  #   transport: "SMTP"
+  #   options:
+  #     host: "smtp.gmail.com"
+  #     port: 587
+  #     secure: false
+  #     auth:
+  #       user: "your-email@gmail.com"
+  #       pass: "your-app-password"
+  #     from: "noreply@yourdomain.com"
 
 # Service configuration
 service:
-  type: ClusterIP  # Use ClusterIP if using Ingress, NodePort for direct access
+  type: ClusterIP  # Use ClusterIP for Ingress/Cloudflare Tunnel
   port: 2368  # Ghost default port
   nodePort: 30080  # Only used if type is NodePort. Set to null for auto-assignment
 
@@ -83,9 +84,9 @@ livenessProbe:
   httpGet:
     path: /
     port: 2368
-  initialDelaySeconds: 60
+  initialDelaySeconds: 90
   periodSeconds: 10
-  timeoutSeconds: 5
+  timeoutSeconds: 10
   failureThreshold: 3
 
 readinessProbe:
@@ -93,9 +94,9 @@ readinessProbe:
   httpGet:
     path: /
     port: 2368
-  initialDelaySeconds: 30
+  initialDelaySeconds: 60
   periodSeconds: 10
-  timeoutSeconds: 5
+  timeoutSeconds: 10
   failureThreshold: 3
 
 # Node selector (optional)
@@ -115,18 +116,13 @@ extraEnv: []
 
 # Ingress configuration
 ingress:
-  enabled: true
-  className: nginx  # Your ingress class name
-  host: balkandevops.com
+  enabled: false  # Using separate ingress manifest with external-dns
+  className: nginx
+  host: blog.balkandevops.com
   path: /
   pathType: Prefix
-  annotations: {}
-    # Add any ingress annotations here if needed
-    # Example for nginx-ingress:
-    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  annotations:
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+    external-dns.alpha.kubernetes.io/hostname: blog.balkandevops.com
+    external-dns.alpha.kubernetes.io/target: d4d7f917-3152-4d10-aaf6-4b2e62743fc6.cfargotunnel.com
   tls: []
-    # If you have TLS certificate manually configured, uncomment:
-    # - hosts:
-    #   - balkandevops.com
-    #   secretName: ghost-tls

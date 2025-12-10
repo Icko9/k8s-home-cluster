@@ -1,0 +1,50 @@
+# Secrets - NEVER commit these
+**/secrets/
+**/secret*.yaml
+*secret*.yaml
+*.key
+*.pem
+*.crt
+!*.example.yaml
+
+# Credentials
+*credentials*
+*-credentials.yaml
+tunnel-credentials.yaml
+
+# Environment files
+.env
+.env.*
+*.env
+
+# Helm
+**/charts/*.tgz
+**/*.tgz
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform (if used later)
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# kubeconfig - NEVER commit
+kubeconfig
+kubeconfig.yaml
+*.kubeconfig
+
