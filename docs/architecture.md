@@ -551,4 +551,4 @@ kubectl logs -n cloudflare deployment/cloudflare-tunnel
 
 **Last Updated:** 2025-12-01  
 **Domain:** balkandevops.com  
-**Repository:** github.com/icko0/k8s-home-cluster
+**Repository:** github.com/icko9/k8s-home-cluster
