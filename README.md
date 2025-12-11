@@ -86,11 +86,5 @@ cd k8s-home-cluster
 - Renovate for dependency updates
 - Automated backups with Velero
 
-## 📝 License
-
-MIT
-
----
-
 *Built with ☕ and late nights debugging WiFi nodes.*
 
