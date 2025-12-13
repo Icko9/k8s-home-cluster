@@ -1,0 +1,23 @@
+# Bookstack - Documentation/Wiki platform
+# Access: https://bookstack.balkandevops.com
+
+# NOTE: Secrets (APP_KEY, DB_PASSWORD) are stored in Kubernetes Secret 'bookstack-db'
+# To properly use the secret, Helm chart needs upgrade to load envFrom
+# Current deployment has secrets in env directly (not ideal for Git)
+
+env:
+  APP_URL: http://bookstack.balkandevops.com
+  DB_HOST: bookstack-db
+  DB_PORT: "3306"
+  DB_DATABASE: bookstack
+  DB_USERNAME: bookstack
+  # APP_KEY and DB_PASSWORD loaded from bookstack-db secret (manual config)
+
+mariadb:
+  enabled: false
+
+persistence:
+  config:
+    enabled: true
+    size: 8Gi
+    storageClass: longhorn
