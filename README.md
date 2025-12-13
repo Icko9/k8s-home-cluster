@@ -63,7 +63,7 @@ k8s-home-cluster/
 - **Monitoring**: Prometheus + Grafana
 - **DNS**: AdGuard Home (cluster + home network)
 
-## 🔧 Quick Start
+## 🔧 Quick Start ( Not yet finished )
 
 See [Getting Started Guide](docs/getting-started.md) for complete setup instructions.
 
