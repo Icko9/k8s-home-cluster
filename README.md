@@ -2,7 +2,7 @@
 
 A GitOps-managed Kubernetes homelab running on repurposed laptops.
 
-## 🏗️ Architecture. [Architecture deep dive](docs/troubleshooting/architecture.md).
+## 🏗️ [Architecture](docs/troubleshooting/architecture.md).
 
 ### Physical Layout
 - **1x ASUS VivoBook** - Hosts master VM + runs as worker node
