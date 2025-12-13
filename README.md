@@ -16,7 +16,7 @@ A GitOps-managed Kubernetes homelab running on repurposed laptops.
 | Worker 1 | `asuslpt` | Physical | Worker + VM Host | USB-to-LAN | 192.168.1.104 |
 | Worker 2 | `precision5540` | Physical | Worker | WiFi ⚠️ | 192.168.1.105 |
 
-> **Note:** The `precision5540` WiFi node requires special iptables MASQUERADE configuration. See [WiFi Node Setup](docs/troubleshooting/wifi-node-debugging.md) or run `scripts/setup-wifi-node.sh`.
+> **Note:** The `precision5540` WiFi node requires special iptables MASQUERADE configuration. See [WiFi Node Setup](docs/troubleshooting/wifi-node-debugging.md).
 
 ## 📦 Deployed Applications
 
@@ -37,6 +37,7 @@ k8s-home-cluster/
 │   ├── cv/                      # Personal CV page
 │   ├── ghost/                   # Ghost blog (Helm chart)
 │   ├── grafana/                 # Monitoring dashboards
+|   ├── nextcloud/               # Family Cloud 
 │   └── homepage/                # Homepage dashboard
 │
 ├── infrastructure/              # Cluster infrastructure
@@ -49,7 +50,7 @@ k8s-home-cluster/
 │   └── troubleshooting/         # Debug guides & postmortems
 │
 └── scripts/                     # Helper scripts
-    └── setup-wifi-node.sh       # WiFi node MASQUERADE setup
+    └── <Empty>
 ```
 
 > **⚠️ Important:** Replace all IP addresses (192.168.1.x) in configs with your actual network addresses when replicating this setup.
@@ -63,28 +64,6 @@ k8s-home-cluster/
 - **Monitoring**: Prometheus + Grafana
 - **DNS**: AdGuard Home (cluster + home network)
 
-## 🔧 Quick Start ( Not yet finished )
-
-See [Getting Started Guide](docs/getting-started.md) for complete setup instructions.
-
-```bash
-# Clone the repository
-git clone git@github.com:icko0/k8s-home-cluster.git
-cd k8s-home-cluster
-
-# Follow installation order in docs/getting-started.md
-# 1. Infrastructure (Longhorn)
-# 2. Ingress (Cloudflare Tunnel)
-# 3. Monitoring (Prometheus, Grafana)
-# 4. Applications (Ghost, Homepage, etc.)
-```
-
-## 🎯 Roadmap
-
-- ArgoCD for GitOps automation
-- Sealed Secrets for secret management
-- Renovate for dependency updates
-- Automated backups with Velero
 
 *Built with ☕ and late nights debugging WiFi nodes.*
 
