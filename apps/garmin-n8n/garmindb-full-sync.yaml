@@ -1,0 +1,102 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: garmindb-full-sync
+  namespace: garmin-n8n
+spec:
+  template:
+    metadata:
+      labels:
+        app: garmindb-sync
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: garmindb
+        image: python:3.11-slim
+        command: ["/bin/bash", "/scripts/sync.sh"]
+        volumeMounts:
+        - name: garmindb-data
+          mountPath: /data
+        - name: garmindb-script
+          mountPath: /scripts
+          readOnly: true
+        - name: garmin-connect-secret
+          mountPath: /secrets
+          readOnly: true
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+      volumes:
+      - name: garmindb-data
+        persistentVolumeClaim:
+          claimName: garmindb-data
+      - name: garmindb-script
+        configMap:
+          name: garmindb-full-sync-script
+          defaultMode: 0755
+      - name: garmin-connect-secret
+        secret:
+          secretName: garmin-connect-credentials
+          optional: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: garmindb-full-sync-script
+  namespace: garmin-n8n
+data:
+  sync.sh: |
+    #!/bin/bash
+    set -e
+    
+    echo "=== GarminDB Full Sync (From June 9, 2024) ==="
+    
+    # Install dependencies
+    pip install --no-cache-dir garmindb || true
+    
+    # Set HOME to /data so GarminDB uses /data/HealthData by default
+    export HOME=/data
+    
+    # Ensure config directory exists
+    mkdir -p /data/.GarminDb
+    
+    # Copy config from secret
+    if [ -f /secrets/garmin-connect-config.json ]; then
+      echo "Copying Garmin Connect config..."
+      cp /secrets/garmin-connect-config.json /data/.GarminDb/GarminConnectConfig.json
+      echo "Config prepared (using SQLite)"
+    else
+      echo "ERROR: Garmin Connect config not found in secret"
+      exit 1
+    fi
+    
+    # Create database directories
+    mkdir -p /data/HealthData/DBs
+    mkdir -p /data/HealthData/FitFiles
+    mkdir -p /data/HealthData/Monitoring
+    mkdir -p /data/HealthData/Sleep
+    mkdir -p /data/HealthData/Weight
+    mkdir -p /data/HealthData/RHR
+    
+    # Change to data directory
+    cd /data
+    
+    # Run GarminDB FULL sync (NO --latest flag for first sync)
+    # --all: Process all data types
+    # --download: Download from Garmin Connect
+    # --import: Import into database
+    # --analyze: Generate summaries
+    # NO --latest: Pull ALL data from start_date (June 9, 2024)
+    echo "Running GarminDB FULL sync (this will take a while - ~6 months of data)..."
+    echo "Start date: June 9, 2024"
+    garmindb_cli.py --all --download --import --analyze
+    
+    echo ""
+    echo "=== Full Sync completed! ==="
+    echo "Database files:"
+    ls -lh /data/HealthData/DBs/*.db 2>/dev/null || echo "No databases found"
+
