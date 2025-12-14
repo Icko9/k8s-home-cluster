@@ -32,4 +32,32 @@ spec:
           storage: 20Gi
       storageClassName: longhorn
   username: garmindb
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grant-garmindb-permissions
+  namespace: garmin-n8n
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mysql-client
+        image: mariadb:11.4
+        command:
+        - /bin/bash
+        - -c
+        - |
+          mysql -h garmin-mariadb -u root -p${MARIADB_ROOT_PASSWORD} <<EOF
+          GRANT ALL PRIVILEGES ON *.* TO 'garmindb'@'%';
+          FLUSH PRIVILEGES;
+          EOF
+          echo "Permissions granted to garmindb user"
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: garmin-mariadb-credentials
+              key: password
 
