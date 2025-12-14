@@ -1,0 +1,135 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: garmindb-sync-test
+  namespace: garmin-n8n
+spec:
+  template:
+    metadata:
+      labels:
+        app: garmindb-sync
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: garmindb
+        image: python:3.11-slim
+        command: ["/bin/bash", "/scripts/sync.sh"]
+        env:
+        - name: MARIADB_HOST
+          value: "garmin-mariadb.garmin-n8n.svc.cluster.local"
+        - name: MARIADB_PORT
+          value: "3306"
+        - name: MARIADB_DATABASE
+          value: "garmindb"
+        - name: MARIADB_USER
+          valueFrom:
+            secretKeyRef:
+              name: garmin-mariadb-credentials
+              key: password
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: garmin-mariadb-credentials
+              key: password
+        volumeMounts:
+        - name: garmindb-data
+          mountPath: /data
+        - name: garmindb-script
+          mountPath: /scripts
+          readOnly: true
+        - name: garmin-connect-secret
+          mountPath: /secrets
+          readOnly: true
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      initContainers:
+      - name: install-deps
+        image: python:3.11-slim
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            echo "Installing GarminDB and dependencies..."
+            pip install --no-cache-dir garmindb mysql-connector-python pymysql
+            echo "Dependencies installed!"
+        volumeMounts:
+        - name: garmindb-deps
+          mountPath: /deps
+      volumes:
+      - name: garmindb-data
+        persistentVolumeClaim:
+          claimName: garmindb-data
+      - name: garmindb-script
+        configMap:
+          name: garmindb-sync-script
+          defaultMode: 0755
+      - name: garmin-connect-secret
+        secret:
+          secretName: garmin-connect-credentials
+          optional: true
+      - name: garmindb-deps
+        emptyDir: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: garmindb-sync-script
+  namespace: garmin-n8n
+data:
+  sync.sh: |
+    #!/bin/bash
+    set -e
+    
+    echo "=== GarminDB Sync Script ==="
+    
+    # Install dependencies (if not already installed)
+    pip install --no-cache-dir garmindb mysql-connector-python pymysql || true
+    
+    # Ensure config directory exists
+    mkdir -p /root/.GarminDb
+    
+    # Copy config from secret if it exists
+    if [ -f /secrets/garmin-connect-config.json ]; then
+      echo "Copying Garmin Connect config..."
+      cp /secrets/garmin-connect-config.json /root/.GarminDb/GarminConnectConfig.json
+      
+      # Replace the placeholder password with the actual MariaDB password from env var
+      sed -i "s/REPLACE_WITH_ACTUAL_PASSWORD/${MARIADB_PASSWORD}/g" /root/.GarminDb/GarminConnectConfig.json
+      
+      echo "Config prepared with MariaDB credentials"
+    else
+      echo "ERROR: Garmin Connect config not found in secret"
+      exit 1
+    fi
+    
+    # Change to data directory
+    cd /data
+    
+    # Run GarminDB sync
+    # --all: Process all data types
+    # --download: Download from Garmin Connect
+    # --import: Import into database
+    # --analyze: Generate summaries
+    # --latest: Only sync latest data (for daily runs)
+    echo "Running GarminDB sync..."
+    garmindb_cli.py --all --download --import --analyze --latest
+    
+    echo "=== Sync completed successfully! ==="
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: garmindb-data
+  namespace: garmin-n8n
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+
