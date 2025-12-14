@@ -9,19 +9,21 @@ metadata:
   name: garmin-mariadb
   namespace: garmin-n8n
 spec:
-  storage:
-    size: 20Gi
-    storageClassName: longhorn
+  volumeClaimTemplate:
     accessModes:
       - ReadWriteOnce
-  image: mariadb:11.2
+    resources:
+      requests:
+        storage: 20Gi
+    storageClassName: longhorn
+  image: mariadb:11.4
   rootPasswordSecretKeyRef:
     name: garmin-mariadb-credentials
-    key: root-password
+    key: password
   username: garmindb
   passwordSecretKeyRef:
     name: garmin-mariadb-credentials
-    key: user-password
+    key: password
   database: garmindb
   resources:
     requests:
