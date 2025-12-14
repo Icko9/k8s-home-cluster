@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: garmin-n8n
+---
+apiVersion: mariadb.mmontes.io/v1alpha1
+kind: MariaDB
+metadata:
+  name: garmin-mariadb
+  namespace: garmin-n8n
+spec:
+  storage:
+    size: 20Gi
+    storageClassName: longhorn
+    accessModes:
+      - ReadWriteOnce
+  image: mariadb:11.2
+  rootPasswordSecretKeyRef:
+    name: garmin-mariadb-credentials
+    key: root-password
+  username: garmindb
+  passwordSecretKeyRef:
+    name: garmin-mariadb-credentials
+    key: user-password
+  database: garmindb
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
