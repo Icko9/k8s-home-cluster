@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: garmin-n8n
 ---
-apiVersion: mariadb.mmontes.io/v1alpha1
+apiVersion: k8s.mariadb.com/v1alpha1
 kind: MariaDB
 metadata:
   name: garmin-mariadb
