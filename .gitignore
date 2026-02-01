@@ -43,6 +43,9 @@ Thumbs.db
 *.bak
 *.log
 
+#copilot instructions md
+copilot-instructions.md
+
 # kubeconfig - NEVER commit
 kubeconfig
 kubeconfig.yaml
