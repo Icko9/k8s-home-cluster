@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: garmindb-daily-sync-script
+  namespace: garmin
+data:
+  daily-sync.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=== GarminDB Daily Sync (latest data only) ==="
+    echo "Started at: $(date)"
+
+    # Install dependencies
+    pip install --no-cache-dir garmindb || true
+
+    export HOME=/data
+    mkdir -p /data/.GarminDb
+
+    # Copy config from secret
+    if [ -f /secrets/garmin-connect-config.json ]; then
+      cp /secrets/garmin-connect-config.json /data/.GarminDb/GarminConnectConfig.json
+    else
+      echo "ERROR: Config not found"
+      exit 1
+    fi
+
+    cd /data
+
+    # --all = all stat types, --latest = recent data only (not historical)
+    garmindb_cli.py --config /data/.GarminDb --all --latest --download --import --analyze
+
+    echo ""
+    echo "=== Daily sync completed at $(date) ==="
+    echo "Database files:"
+    ls -lh /data/HealthData/DBs/*.db 2>/dev/null || echo "No databases found"
