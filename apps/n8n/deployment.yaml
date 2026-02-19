@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+  namespace: n8n
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n8n
+  template:
+    metadata:
+      labels:
+        app: n8n
+    spec:
+      containers:
+        - name: n8n
+          image: n8nio/n8n:latest
+          ports:
+            - containerPort: 5678
+          env:
+            - name: N8N_PORT
+              value: "5678"
+            - name: N8N_HOST
+              value: n8n.balkandevops.com
+            - name: N8N_PROTOCOL
+              value: https
+            - name: WEBHOOK_URL
+              value: https://n8n.balkandevops.com/
+            - name: TZ
+              value: Europe/Skopje
+          volumeMounts:
+            - name: n8n-data
+              mountPath: /home/node/.n8n
+            - name: garmin-data
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: n8n-data
+          persistentVolumeClaim:
+            claimName: n8n-data
+        # Note: This uses hostPath to access garmin PVC data from another namespace
+        - name: garmin-data
+          hostPath:
+            path: /var/lib/rancher/k3s/storage/pvc-e54a060d-4bcc-4926-bf8e-1ec5c72a1a0d_garmin_garmin-db-pvc
+            type: Directory
