@@ -1,0 +1,4521 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 201,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# 🏃 Garmin Health & Fitness Dashboard\n\nSelf-hosted analytics built with **GarminDB + Grafana** on k3s. Includes metrics Garmin Connect doesn't show: aerobic decoupling, efficiency factor, summit log.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 200,
+      "panels": [],
+      "title": "🥾 Hiking Performance",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 4
+      },
+      "id": 103,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT COUNT(*) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT COUNT(*) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Total Hikes",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "km"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 4
+      },
+      "id": 102,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(SUM(distance), 1) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(SUM(distance), 1) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Total Distance",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-orange",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "lengthm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 4
+      },
+      "id": 101,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(SUM(ascent), 0) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(SUM(ascent), 0) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Total Elevation",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-purple",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-purple",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "m/h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 4
+      },
+      "id": 104,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(AVG(\n  ascent / NULLIF((strftime('%s', '1970-01-01 ' || moving_time) - strftime('%s', '1970-01-01')) / 3600.0, 0)\n), 0) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND ascent > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(AVG(\n  ascent / NULLIF((strftime('%s', '1970-01-01 ' || moving_time) - strftime('%s', '1970-01-01')) / 3600.0, 0)\n), 0) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND ascent > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Avg Ascent Rate",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 4
+      },
+      "id": 109,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(SUM(\n  (strftime('%s', '1970-01-01 ' || moving_time) - strftime('%s', '1970-01-01')) / 3600.0\n), 1) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(SUM(\n  (strftime('%s', '1970-01-01 ' || moving_time) - strftime('%s', '1970-01-01')) / 3600.0\n), 1) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Total Time",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "kcal"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 4
+      },
+      "id": 110,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(SUM(calories), 0) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(SUM(calories), 0) AS value\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Total Calories",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "summit_m"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "lengthm"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "km"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "km"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlYlRd"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gain_m"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "lengthm"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 108,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "elevation_m"
+          }
+        ]
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT \n  a.name AS peak,\n  ROUND(MAX(r.altitude), 0) AS summit_m,\n  date(a.start_time) AS date,\n  ROUND(a.distance, 1) AS km,\n  ROUND(a.ascent, 0) AS gain_m,\n  a.moving_time AS duration\nFROM activities_db.activities a\nJOIN activities_db.activity_records r ON a.activity_id = r.activity_id\nWHERE a.sport = 'hiking'\n  AND a.start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nGROUP BY a.activity_id\nORDER BY summit_m DESC\nLIMIT 15;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT \n  a.name AS peak,\n  ROUND(MAX(r.altitude), 0) AS summit_m,\n  date(a.start_time) AS date,\n  ROUND(a.distance, 1) AS km,\n  ROUND(a.ascent, 0) AS gain_m,\n  a.moving_time AS duration\nFROM activities_db.activities a\nJOIN activities_db.activity_records r ON a.activity_id = r.activity_id\nWHERE a.sport = 'hiking'\n  AND a.start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nGROUP BY a.activity_id\nORDER BY summit_m DESC\nLIMIT 15;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "⛰️ Top Summits Reached",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Elevation Gained",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "lengthm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 105,
+      "options": {
+        "barRadius": 0.1,
+        "barWidth": 0.8,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": -45,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT \n  strftime('%Y-%m', start_time) AS time,\n  ROUND(SUM(ascent), 0) AS elevation\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nGROUP BY strftime('%Y-%m', start_time)\nORDER BY time;\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT \n  strftime('%Y-%m', start_time) AS time,\n  ROUND(SUM(ascent), 0) AS elevation\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nGROUP BY strftime('%Y-%m', start_time)\nORDER BY time;\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "📈 Monthly Elevation Gained",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-purple",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Ascent Rate (m/h)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 8,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 400
+              }
+            ]
+          },
+          "unit": "m/h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 107,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  ROUND(ascent / NULLIF((strftime('%s', '1970-01-01 ' || moving_time) - strftime('%s', '1970-01-01')) / 3600.0, 0), 0) AS ascent_rate\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND ascent > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nORDER BY time;\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  ROUND(ascent / NULLIF((strftime('%s', '1970-01-01 ' || moving_time) - strftime('%s', '1970-01-01')) / 3600.0, 0), 0) AS ascent_rate\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND ascent > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nORDER BY time;\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "⬆️ Ascent Rate Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#73BF69",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Elevation Gained (m)",
+            "axisPlacement": "auto",
+            "fillOpacity": 90,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 10,
+              "max": 35,
+              "min": 10
+            },
+            "pointStrokeWidth": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "elevation_m"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "lengthm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "distance_km"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "km"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 10,
+        "x": 12,
+        "y": 17
+      },
+      "id": 106,
+      "options": {
+        "dims": {
+          "exclude": [
+            "time"
+          ],
+          "x": "distance_km"
+        },
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "x": "distance_km",
+            "y": "elevation_m"
+          }
+        ],
+        "seriesMapping": "manual",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  ROUND(distance, 1) AS distance_km,\n  ROUND(ascent, 0) AS elevation_m\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND distance > 0\n  AND ascent > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  ROUND(distance, 1) AS distance_km,\n  ROUND(ascent, 0) AS elevation_m\nFROM activities_db.activities\nWHERE sport = 'hiking'\n  AND distance > 0\n  AND ascent > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "📊 Distance vs Elevation",
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "bfc5zeaa0vqioe"
+      },
+      "description": "Your highest summit based on max altitude recorded during hiking activities",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#FF6B35",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#FF6B35",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "lengthm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 2,
+        "x": 22,
+        "y": 17
+      },
+      "id": 111,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(MAX(r.altitude), 0) AS \"🏔️ Peak\"\nFROM activities_db.activities a\nJOIN activities_db.activity_records r ON a.activity_id = r.activity_id\nWHERE a.sport = 'hiking';",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS activities_db;\n\nSELECT ROUND(MAX(r.altitude), 0) AS \"🏔️ Peak\"\nFROM activities_db.activities a\nJOIN activities_db.activity_records r ON a.activity_id = r.activity_id\nWHERE a.sport = 'hiking';",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "🏔️ Highest Summit",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 21,
+      "panels": [],
+      "title": "🏃 Running Performance",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "km"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 3,
+        "x": 0,
+        "y": 25
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT ROUND(SUM(distance), 1) AS value\nFROM act.activities\nWHERE sport = 'running'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT ROUND(SUM(distance), 1) AS value\nFROM act.activities\nWHERE sport = 'running'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}';\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Total Distance",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 45
+              },
+              {
+                "color": "blue",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "bpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 3,
+        "x": 3,
+        "y": 25
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_monitoring.db' AS monitoring;\n\nSELECT ROUND(AVG(min_hr), 0) AS value\nFROM (\n  SELECT MIN(heart_rate) AS min_hr\n  FROM monitoring.monitoring_hr\n  WHERE timestamp >= date('now', '-7 days')\n    AND strftime('%H', timestamp) BETWEEN '05' AND '08'\n  GROUP BY date(timestamp)\n);",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_monitoring.db' AS monitoring;\n\nSELECT ROUND(AVG(min_hr), 0) AS value\nFROM (\n  SELECT MIN(heart_rate) AS min_hr\n  FROM monitoring.monitoring_hr\n  WHERE timestamp >= date('now', '-7 days')\n    AND strftime('%H', timestamp) BETWEEN '05' AND '08'\n  GROUP BY date(timestamp)\n);",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Resting HR (7d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 4
+              },
+              {
+                "color": "blue",
+                "value": 8
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 3,
+        "x": 6,
+        "y": 25
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT COUNT(*) AS value\nFROM act.activities\nWHERE sport = 'running'\n  AND start_time >= datetime('now', '-30 days');",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT COUNT(*) AS value\nFROM act.activities\nWHERE sport = 'running'\n  AND start_time >= datetime('now', '-30 days');",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Runs (30d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 0.06
+              },
+              {
+                "color": "blue",
+                "value": 0.07
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 3,
+        "x": 9,
+        "y": 25
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT ROUND(AVG(\n  (distance / NULLIF(\n    (strftime('%s', '1970-01-01 ' || moving_time) - strftime('%s', '1970-01-01')) / 3600.0\n  , 0)) / NULLIF(avg_hr, 0)\n), 3) AS value\nFROM act.activities\nWHERE sport = 'running'\n  AND start_time >= date('now', '-30 days')\n  AND distance > 0\n  AND avg_hr > 0;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT ROUND(AVG(\n  (distance / NULLIF(\n    (strftime('%s', '1970-01-01 ' || moving_time) - strftime('%s', '1970-01-01')) / 3600.0\n  , 0)) / NULLIF(avg_hr, 0)\n), 3) AS value\nFROM act.activities\nWHERE sport = 'running'\n  AND start_time >= date('now', '-30 days')\n  AND distance > 0\n  AND avg_hr > 0;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Efficiency (30d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 25
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT\nCAST(strftime('%s', start_time) AS INTEGER) AS time,\nROUND(\n(distance / NULLIF(\n(strftime('%s', '1970-01-01 ' || substr(moving_time,1,8)) - strftime('%s', '1970-01-01')) / 3600.0\n, 0)) / NULLIF(avg_hr, 0),\n3) AS value\nFROM act.activities\nWHERE sport = 'running'\nAND distance > 0\nAND avg_hr > 0\nAND time BETWEEN ${__from:date:seconds} AND ${__to:date:seconds}\nORDER BY time;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT\nCAST(strftime('%s', start_time) AS INTEGER) AS time,\nROUND(\n(distance / NULLIF(\n(strftime('%s', '1970-01-01 ' || substr(moving_time,1,8)) - strftime('%s', '1970-01-01')) / 3600.0\n, 0)) / NULLIF(avg_hr, 0),\n3) AS value\nFROM act.activities\nWHERE sport = 'running'\nAND distance > 0\nAND avg_hr > 0\nAND time BETWEEN ${__from:date:seconds} AND ${__to:date:seconds}\nORDER BY time;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Efficiency Factor (speed/HR)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "km"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 33
+      },
+      "id": 1,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "default"
+          },
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT\ndate(start_time, 'weekday 1', '-7 days') AS time,\nROUND(SUM(distance), 2) AS value\nFROM act.activities\nWHERE sport = 'running'\nAND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nGROUP BY 1\nORDER BY 1;\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT\ndate(start_time, 'weekday 1', '-7 days') AS time,\nROUND(SUM(distance), 2) AS value\nFROM act.activities\nWHERE sport = 'running'\nAND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nGROUP BY 1\nORDER BY 1;\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Weekly Running Distance (km)",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "aerobic"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Aerobic"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "anaerobic"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Anaerobic"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 33
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  training_effect AS aerobic,\n  anaerobic_training_effect AS anaerobic\nFROM act.activities\nWHERE sport = 'running'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nORDER BY time;\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  training_effect AS aerobic,\n  anaerobic_training_effect AS anaerobic\nFROM act.activities\nWHERE sport = 'running'\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nORDER BY time;\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Aerobic vs Anaerobic Effect",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "purple",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "spm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 41
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  avg_cadence\nFROM act.activities\nWHERE sport = 'running'\n  AND avg_cadence > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nORDER BY time;\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  avg_cadence\nFROM act.activities\nWHERE sport = 'running'\n  AND avg_cadence > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nORDER BY time;\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Cadence Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "yellow",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 41
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nWITH run_data AS (\n  SELECT \n    r.activity_id,\n    a.name,\n    a.start_time,\n    r.record,\n    r.hr,\n    r.speed,\n    COUNT(*) OVER (PARTITION BY r.activity_id) AS total_records,\n    ROW_NUMBER() OVER (PARTITION BY r.activity_id ORDER BY r.record) AS rn\n  FROM act.activity_records r\n  JOIN act.activities a ON r.activity_id = a.activity_id\n  WHERE a.sport = 'running'\n    AND r.hr > 0 \n    AND r.speed > 0\n    AND a.distance > 5\n    AND LOWER(a.name) NOT LIKE '%sprint%'\n    AND LOWER(a.name) NOT LIKE '%interval%'\n    AND LOWER(a.name) NOT LIKE '%tempo%'\n    AND LOWER(a.name) NOT LIKE '%threshold%'\n    AND LOWER(a.name) NOT LIKE '%speed%'\n),\nhalves AS (\n  SELECT \n    activity_id,\n    start_time,\n    CASE WHEN rn <= total_records/2 THEN 'first' ELSE 'second' END AS half,\n    AVG(speed) AS avg_speed,\n    AVG(hr) AS avg_hr\n  FROM run_data\n  GROUP BY activity_id, start_time, half\n),\ndecoupling AS (\n  SELECT \n    f.start_time,\n    ROUND(((f.avg_speed / f.avg_hr) - (s.avg_speed / s.avg_hr)) / (f.avg_speed / f.avg_hr) * 100, 2) AS decoupling_pct\n  FROM halves f\n  JOIN halves s ON f.activity_id = s.activity_id AND f.half = 'first' AND s.half = 'second'\n)\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  decoupling_pct\nFROM decoupling\nWHERE decoupling_pct >= 0\nORDER BY time;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nWITH run_data AS (\n  SELECT \n    r.activity_id,\n    a.name,\n    a.start_time,\n    r.record,\n    r.hr,\n    r.speed,\n    COUNT(*) OVER (PARTITION BY r.activity_id) AS total_records,\n    ROW_NUMBER() OVER (PARTITION BY r.activity_id ORDER BY r.record) AS rn\n  FROM act.activity_records r\n  JOIN act.activities a ON r.activity_id = a.activity_id\n  WHERE a.sport = 'running'\n    AND r.hr > 0 \n    AND r.speed > 0\n    AND a.distance > 5\n    AND LOWER(a.name) NOT LIKE '%sprint%'\n    AND LOWER(a.name) NOT LIKE '%interval%'\n    AND LOWER(a.name) NOT LIKE '%tempo%'\n    AND LOWER(a.name) NOT LIKE '%threshold%'\n    AND LOWER(a.name) NOT LIKE '%speed%'\n),\nhalves AS (\n  SELECT \n    activity_id,\n    start_time,\n    CASE WHEN rn <= total_records/2 THEN 'first' ELSE 'second' END AS half,\n    AVG(speed) AS avg_speed,\n    AVG(hr) AS avg_hr\n  FROM run_data\n  GROUP BY activity_id, start_time, half\n),\ndecoupling AS (\n  SELECT \n    f.start_time,\n    ROUND(((f.avg_speed / f.avg_hr) - (s.avg_speed / s.avg_hr)) / (f.avg_speed / f.avg_hr) * 100, 2) AS decoupling_pct\n  FROM halves f\n  JOIN halves s ON f.activity_id = s.activity_id AND f.half = 'first' AND s.half = 'second'\n)\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  decoupling_pct\nFROM decoupling\nWHERE decoupling_pct >= 0\nORDER BY time;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Aerobic Decoupling % (lower = better)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "bpm"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "resting_hr"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "RHR"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "rhr_7d_avg"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "7d Avg"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 49
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_monitoring.db' AS monitoring;\n\nWITH daily AS (\n  SELECT \n    date(timestamp) AS day,\n    MIN(heart_rate) AS resting_hr\n  FROM monitoring.monitoring_hr\n  WHERE strftime('%H', timestamp) BETWEEN '05' AND '08'\n  GROUP BY date(timestamp)\n)\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  resting_hr,\n  ROUND(AVG(resting_hr) OVER (ORDER BY day ROWS BETWEEN 6 PRECEDING AND CURRENT ROW), 1) AS rhr_7d_avg\nFROM daily\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_monitoring.db' AS monitoring;\n\nWITH daily AS (\n  SELECT \n    date(timestamp) AS day,\n    MIN(heart_rate) AS resting_hr\n  FROM monitoring.monitoring_hr\n  WHERE strftime('%H', timestamp) BETWEEN '05' AND '08'\n  GROUP BY date(timestamp)\n)\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  resting_hr,\n  ROUND(AVG(resting_hr) OVER (ORDER BY day ROWS BETWEEN 6 PRECEDING AND CURRENT ROW), 1) AS rhr_7d_avg\nFROM daily\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Resting HR (morning)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "avg_hr"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Avg HR"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max_hr"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Max HR"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 49
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  avg_hr,\n  max_hr\nFROM act.activities\nWHERE sport = 'running'\n  AND avg_hr > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nORDER BY time;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_activities.db' AS act;\n\nSELECT \n  CAST(strftime('%s', start_time) AS INTEGER) AS time,\n  avg_hr,\n  max_hr\nFROM act.activities\nWHERE sport = 'running'\n  AND avg_hr > 0\n  AND start_time BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nORDER BY time;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Running HR Trend",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 57
+      },
+      "id": 100,
+      "panels": [],
+      "title": "📊 Daily Health Stats",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 80,
+          "min": 40,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 50
+              },
+              {
+                "color": "#EAB839",
+                "value": 61
+              },
+              {
+                "color": "dark-red",
+                "value": 71
+              }
+            ]
+          },
+          "unit": "bpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 0,
+        "y": 58
+      },
+      "id": 32,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT rhr_avg AS value\nFROM summary.days_summary\nWHERE rhr_avg IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT rhr_avg AS value\nFROM summary.days_summary\nWHERE rhr_avg IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Resting HR",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 15000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 5000
+              },
+              {
+                "color": "green",
+                "value": 8000
+              },
+              {
+                "color": "blue",
+                "value": 12000
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 3,
+        "y": 58
+      },
+      "id": 33,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT steps AS value\nFROM summary.days_summary\nWHERE steps IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT steps AS value\nFROM summary.days_summary\nWHERE steps IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Today's Steps",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 25
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 75
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 6,
+        "y": 58
+      },
+      "id": 34,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT bb_max AS value\nFROM summary.days_summary\nWHERE bb_max IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT bb_max AS value\nFROM summary.days_summary\nWHERE bb_max IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Body Battery",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 25
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "dark-red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 9,
+        "y": 58
+      },
+      "id": 35,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT stress_avg AS value\nFROM summary.days_summary\nWHERE stress_avg IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT stress_avg AS value\nFROM summary.days_summary\nWHERE stress_avg IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Avg Stress",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bb_max"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Max"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bb_min"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Min"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 58
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  bb_max,\n  bb_min\nFROM summary.days_summary\nWHERE bb_max IS NOT NULL\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  bb_max,\n  bb_min\nFROM summary.days_summary\nWHERE bb_max IS NOT NULL\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Body Battery Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 64
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  steps\nFROM summary.days_summary\nWHERE steps IS NOT NULL\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  steps\nFROM summary.days_summary\nWHERE steps IS NOT NULL\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Daily Steps Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "bpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 64
+      },
+      "id": 38,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  rhr_avg AS rhr\nFROM summary.days_summary\nWHERE rhr_avg IS NOT NULL\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  rhr_avg AS rhr\nFROM summary.days_summary\nWHERE rhr_avg IS NOT NULL\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Resting HR Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 70
+      },
+      "id": 39,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  stress_avg\nFROM summary.days_summary\nWHERE stress_avg IS NOT NULL\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  stress_avg\nFROM summary.days_summary\nWHERE stress_avg IS NOT NULL\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Daily Stress Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "yellow",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "kcal"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 70
+      },
+      "id": 40,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  calories_avg AS calories\nFROM summary.days_summary\nWHERE calories_avg IS NOT NULL\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  calories_avg AS calories\nFROM summary.days_summary\nWHERE calories_avg IS NOT NULL\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Daily Calories Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "purple",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "m"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 76
+      },
+      "id": 41,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  activities_distance AS distance\nFROM summary.days_summary\nWHERE activities_distance IS NOT NULL\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  activities_distance AS distance\nFROM summary.days_summary\nWHERE activities_distance IS NOT NULL\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Daily Distance Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "min"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "moderate"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Moderate"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "vigorous"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Vigorous"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 76
+      },
+      "id": 42,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  ROUND((strftime('%s', '1970-01-01 ' || moderate_activity_time) - strftime('%s', '1970-01-01')) / 60.0, 0) AS moderate,\n  ROUND((strftime('%s', '1970-01-01 ' || vigorous_activity_time) - strftime('%s', '1970-01-01')) / 60.0, 0) AS vigorous\nFROM summary.days_summary\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  ROUND((strftime('%s', '1970-01-01 ' || moderate_activity_time) - strftime('%s', '1970-01-01')) / 60.0, 0) AS moderate,\n  ROUND((strftime('%s', '1970-01-01 ' || vigorous_activity_time) - strftime('%s', '1970-01-01')) / 60.0, 0) AS vigorous\nFROM summary.days_summary\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Daily Intensity Minutes",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 3000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 1500
+              },
+              {
+                "color": "green",
+                "value": 2000
+              },
+              {
+                "color": "blue",
+                "value": 2500
+              }
+            ]
+          },
+          "unit": "kcal"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 0,
+        "y": 82
+      },
+      "id": 43,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT calories_avg AS value\nFROM summary.days_summary\nWHERE calories_avg IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT calories_avg AS value\nFROM summary.days_summary\nWHERE calories_avg IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Calories Today",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 15,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 3
+              },
+              {
+                "color": "green",
+                "value": 6
+              },
+              {
+                "color": "blue",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "km"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 3,
+        "y": 82
+      },
+      "id": 44,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT ROUND(activities_distance / 1000.0, 2) AS value\nFROM summary.days_summary\nWHERE activities_distance IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT ROUND(activities_distance / 1000.0, 2) AS value\nFROM summary.days_summary\nWHERE activities_distance IS NOT NULL\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Distance Today",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 90,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 15
+              },
+              {
+                "color": "green",
+                "value": 30
+              },
+              {
+                "color": "blue",
+                "value": 60
+              }
+            ]
+          },
+          "unit": "min"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 6,
+        "y": 82
+      },
+      "id": 45,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  ROUND((strftime('%s', '1970-01-01 ' || moderate_activity_time) - strftime('%s', '1970-01-01')) / 60.0, 0) +\n  ROUND((strftime('%s', '1970-01-01 ' || vigorous_activity_time) - strftime('%s', '1970-01-01')) / 60.0, 0) AS value\nFROM summary.days_summary\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  ROUND((strftime('%s', '1970-01-01 ' || moderate_activity_time) - strftime('%s', '1970-01-01')) / 60.0, 0) +\n  ROUND((strftime('%s', '1970-01-01 ' || vigorous_activity_time) - strftime('%s', '1970-01-01')) / 60.0, 0) AS value\nFROM summary.days_summary\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Intensity Min Today",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 10,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 4
+              },
+              {
+                "color": "green",
+                "value": 6
+              },
+              {
+                "color": "blue",
+                "value": 8
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 9,
+        "y": 82
+      },
+      "id": 46,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT ROUND((strftime('%s', '1970-01-01 ' || total_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 1) AS value\nFROM garmin.sleep\nWHERE total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000'\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT ROUND((strftime('%s', '1970-01-01 ' || total_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 1) AS value\nFROM garmin.sleep\nWHERE total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000'\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Sleep Last Night",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "h"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "deep"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Deep"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "light"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Light"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "rem"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "REM"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "awake"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Awake"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 82
+      },
+      "id": 47,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  ROUND((strftime('%s', '1970-01-01 ' || deep_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS deep,\n  ROUND((strftime('%s', '1970-01-01 ' || light_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS light,\n  ROUND((strftime('%s', '1970-01-01 ' || rem_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS rem,\n  ROUND((strftime('%s', '1970-01-01 ' || awake) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS awake\nFROM garmin.sleep\nWHERE total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000'\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  ROUND((strftime('%s', '1970-01-01 ' || deep_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS deep,\n  ROUND((strftime('%s', '1970-01-01 ' || light_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS light,\n  ROUND((strftime('%s', '1970-01-01 ' || rem_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS rem,\n  ROUND((strftime('%s', '1970-01-01 ' || awake) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS awake\nFROM garmin.sleep\nWHERE total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000'\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Last Night Sleep Breakdown",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "min"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sedentary"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Sedentary"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "lightly_active"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Lightly Active"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "moderately_active"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Moderately Active"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "highly_active"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Highly Active"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 82
+      },
+      "id": 48,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  calories_bmr_avg AS bmr,\n  calories_active_avg AS active\nFROM summary.days_summary\nORDER BY day DESC\nLIMIT 1;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin_summary.db' AS summary;\n\nSELECT \n  calories_bmr_avg AS bmr,\n  calories_active_avg AS active\nFROM summary.days_summary\nORDER BY day DESC\nLIMIT 1;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Today's Calories Breakdown",
+      "type": "piechart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 88
+      },
+      "id": 22,
+      "panels": [],
+      "title": "😴 Sleep & Recovery",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "green",
+                "value": 80
+              },
+              {
+                "color": "blue",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 89
+      },
+      "id": 29,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT ROUND(AVG(score), 0) AS value\nFROM garmin.sleep\nWHERE day >= date('now', '-7 days')\n  AND score IS NOT NULL;\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT ROUND(AVG(score), 0) AS value\nFROM garmin.sleep\nWHERE day >= date('now', '-7 days')\n  AND score IS NOT NULL;\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Avg Sleep Score (7d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 5
+              },
+              {
+                "color": "yellow",
+                "value": 6
+              },
+              {
+                "color": "green",
+                "value": 7
+              },
+              {
+                "color": "blue",
+                "value": 8
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 4,
+        "y": 89
+      },
+      "id": 28,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  ROUND(AVG((strftime('%s', '1970-01-01 ' || total_sleep) - strftime('%s', '1970-01-01')) / 3600.0), 1) AS value\nFROM garmin.sleep\nWHERE day >= date('now', '-7 days')\n  AND total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000';",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  ROUND(AVG((strftime('%s', '1970-01-01 ' || total_sleep) - strftime('%s', '1970-01-01')) / 3600.0), 1) AS value\nFROM garmin.sleep\nWHERE day >= date('now', '-7 days')\n  AND total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000';",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Avg Sleep (7d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 10
+              },
+              {
+                "color": "green",
+                "value": 15
+              },
+              {
+                "color": "blue",
+                "value": 20
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 8,
+        "y": 89
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT ROUND(\n  AVG(\n    (strftime('%s', '1970-01-01 ' || deep_sleep) - strftime('%s', '1970-01-01')) * 100.0 /\n    NULLIF(strftime('%s', '1970-01-01 ' || total_sleep) - strftime('%s', '1970-01-01'), 0)\n  ), 0) AS value\nFROM garmin.sleep\nWHERE day >= date('now', '-7 days')\n  AND total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000';",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT ROUND(\n  AVG(\n    (strftime('%s', '1970-01-01 ' || deep_sleep) - strftime('%s', '1970-01-01')) * 100.0 /\n    NULLIF(strftime('%s', '1970-01-01 ' || total_sleep) - strftime('%s', '1970-01-01'), 0)\n  ), 0) AS value\nFROM garmin.sleep\nWHERE day >= date('now', '-7 days')\n  AND total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000';",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Avg Deep Sleep % (7d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "nights"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 89
+      },
+      "id": 30,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  qualifier,\n  COUNT(*) as nights\nFROM garmin.sleep\nWHERE qualifier IS NOT NULL\n  AND day BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nGROUP BY qualifier\nORDER BY nights DESC;\n",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  qualifier,\n  COUNT(*) as nights\nFROM garmin.sleep\nWHERE qualifier IS NOT NULL\n  AND day BETWEEN '${__from:date:iso}' AND '${__to:date:iso}'\nGROUP BY qualifier\nORDER BY nights DESC;\n",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Sleep Quality Distribution",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 96
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  ROUND((strftime('%s', '1970-01-01 ' || total_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 1) AS sleep_hours\nFROM garmin.sleep\nWHERE total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000'\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  ROUND((strftime('%s', '1970-01-01 ' || total_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 1) AS sleep_hours\nFROM garmin.sleep\nWHERE total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000'\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Sleep Duration Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "deep"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Deep"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "light"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Light"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "rem"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "REM"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "awake"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Awake"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 96
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  ROUND((strftime('%s', '1970-01-01 ' || deep_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS deep,\n  ROUND((strftime('%s', '1970-01-01 ' || light_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS light,\n  ROUND((strftime('%s', '1970-01-01 ' || rem_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS rem,\n  ROUND((strftime('%s', '1970-01-01 ' || awake) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS awake\nFROM garmin.sleep\nWHERE total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000'\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  ROUND((strftime('%s', '1970-01-01 ' || deep_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS deep,\n  ROUND((strftime('%s', '1970-01-01 ' || light_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS light,\n  ROUND((strftime('%s', '1970-01-01 ' || rem_sleep) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS rem,\n  ROUND((strftime('%s', '1970-01-01 ' || awake) - strftime('%s', '1970-01-01')) / 3600.0, 2) AS awake\nFROM garmin.sleep\nWHERE total_sleep IS NOT NULL\n  AND total_sleep != '00:00:00.000000'\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Sleep Stages Breakdown",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 104
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  score AS sleep_score\nFROM garmin.sleep\nWHERE score IS NOT NULL\nORDER BY day;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  CAST(strftime('%s', day) AS INTEGER) AS time,\n  score AS sleep_score\nFROM garmin.sleep\nWHERE score IS NOT NULL\nORDER BY day;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Sleep Score Trend",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "default"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 104
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "queryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  CAST(strftime('%s', date(timestamp)) AS INTEGER) AS time,\n  ROUND(AVG(stress), 0) AS avg_daily_stress\nFROM garmin.stress\nWHERE stress > 0\nGROUP BY date(timestamp)\nORDER BY time;",
+          "queryType": "table",
+          "rawQueryText": "ATTACH '/data/HealthData/DBs/garmin.db' AS garmin;\n\nSELECT \n  CAST(strftime('%s', date(timestamp)) AS INTEGER) AS time,\n  ROUND(AVG(stress), 0) AS avg_daily_stress\nFROM garmin.stress\nWHERE stress > 0\nGROUP BY date(timestamp)\nORDER BY time;",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "Daily Stress Trend",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [
+    "garmin",
+    "fitness",
+    "health"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-2y",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Garmin Health & Fitness",
+  "uid": "garmin-health-fitness",
+  "version": 17
+}

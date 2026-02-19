@@ -1,0 +1,54 @@
+# Grafana Helm Deployment
+# Deployed via Helm chart: grafana/grafana version 10.5.15
+# helm repo add grafana https://grafana.github.io/helm-charts
+# helm install grafana grafana/grafana -n garmin -f values.yaml
+
+# Custom values used for Grafana deployment
+persistence:
+  enabled: true
+  storageClassName: local-path
+  size: 5Gi
+
+adminUser: admin
+# adminPassword from secret grafana-admin
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+    - elite.balkandevops.com
+  path: /
+
+grafana.ini:
+  analytics:
+    check_for_updates: true
+  auth.anonymous:
+    enabled: true
+    hide_version: true
+    org_role: Viewer
+  log:
+    mode: console
+  security:
+    allow_embedding: true
+  server:
+    domain: elite.balkandevops.com
+  users:
+    home_page: /d/garmin-health-fitness/garmin-health-fitness
+
+plugins:
+  - frser-sqlite-datasource
+
+# Additional volumes for garmin data
+extraVolumes:
+  - name: garmindb-data
+    persistentVolumeClaim:
+      claimName: garmin-db-pvc
+
+extraVolumeMounts:
+  - name: garmindb-data
+    mountPath: /data
+    readOnly: true

@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: garmindb-daily-sync
+  namespace: garmin
+spec:
+  schedule: "0 10 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: garmindb-daily-sync
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: garmindb
+              image: python:3.11-slim
+              command:
+                - /bin/bash
+                - /scripts/daily-sync.sh
+              env:
+                - name: HOME
+                  value: /data
+              resources:
+                requests:
+                  cpu: 250m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 1Gi
+              volumeMounts:
+                - name: garmindb-data
+                  mountPath: /data
+                - name: garmindb-script
+                  mountPath: /scripts
+                  readOnly: true
+                - name: garmin-connect-secret
+                  mountPath: /secrets
+                  readOnly: true
+          volumes:
+            - name: garmindb-data
+              persistentVolumeClaim:
+                claimName: garmin-db-pvc
+            - name: garmindb-script
+              configMap:
+                name: garmindb-daily-sync-script
+                defaultMode: 0755
+            - name: garmin-connect-secret
+              secret:
+                secretName: garmin-connect-credentials

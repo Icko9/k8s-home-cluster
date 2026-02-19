@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlite-web
+  namespace: garmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlite-web
+  template:
+    metadata:
+      labels:
+        app: sqlite-web
+    spec:
+      containers:
+        - name: sqlite-web
+          image: datasetteproject/datasette:latest
+          command:
+            - datasette
+          args:
+            - /data/HealthData/DBs
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8080"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: garmin-data
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: garmin-data
+          persistentVolumeClaim:
+            claimName: garmin-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlite-web
+  namespace: garmin
+spec:
+  type: ClusterIP
+  selector:
+    app: sqlite-web
+  ports:
+    - port: 80
+      targetPort: 8080
