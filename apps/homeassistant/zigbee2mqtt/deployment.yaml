@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zigbee2mqtt
+  namespace: homeassistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zigbee2mqtt
+  template:
+    metadata:
+      labels:
+        app: zigbee2mqtt
+    spec:
+      nodeName: precision5540   # pin to the node with the dongle
+      initContainers:
+        - name: copy-config
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              # Always copy fresh config from ConfigMap (remove this check once setup is stable)
+              cp /config/configuration.yaml /app/data/configuration.yaml
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /app/data
+      containers:
+        - name: zigbee2mqtt
+          image: koenkk/zigbee2mqtt:latest
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TZ
+              value: "Europe/Skopje"
+          volumeMounts:
+            - name: zigbee-dongle
+              mountPath: /dev/ttyUSB0
+            - name: data
+              mountPath: /app/data
+      volumes:
+        - name: zigbee-dongle
+          hostPath:
+            path: /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_b2631a778112f01198f90914773d9da9-if00-port0
+            type: CharDevice
+        - name: config
+          configMap:
+            name: zigbee2mqtt-config
+        - name: data
+          hostPath:
+            path: /opt/k8s-data/zigbee2mqtt/data
+            type: DirectoryOrCreate

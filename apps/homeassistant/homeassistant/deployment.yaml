@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homeassistant
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      hostNetwork: false
+      containers:
+        - name: homeassistant
+          image: homeassistant/home-assistant:stable
+          ports:
+            - containerPort: 8123
+          env:
+            - name: TZ
+              value: "Europe/Skopje"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          hostPath:
+            path: /opt/k8s-data/homeassistant/config
+            type: DirectoryOrCreate
